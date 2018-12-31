@@ -4,7 +4,7 @@
 
 const char* ssid = "MaikeESP";
 const char* password = "12345678";
-String html, script, style, response, ledState;
+String html, script, style, response, lampState;
 IPAddress myIP;
 
 ESP8266WebServer server(80);
@@ -39,7 +39,7 @@ void handleLedOn() {
     server.send(500, "application/json", response);
     return;
   }
-  ledState = "1";
+  lampState = "1";
   response = "{\"message\": \"LED Ligado\"}";
   server.send(200, "application/json", response);
 }
@@ -51,7 +51,7 @@ void handleLedOff() {
     server.send(500, "application/json", response);
     return;
   }
-  ledState = "''";
+  lampState = "''";
   response = "{\"message\": \"LED Desligado\"}";
   server.send(200, "application/json", response);
 }
@@ -61,7 +61,7 @@ void loadJavaScript() {
   script += "window.addEventListener('DOMContentLoaded',() => {";
   script += " const container = document.querySelector('.container');";
   script += " const bulb = document.querySelector('#bulb');";
-  script += " let on = !!" + ledState + ";";
+  script += " let on = !!" + lampState + ";";
   script += " container.classList.toggle('led_on', on);";
   script += " bulb.addEventListener('click', () => {";
   script += "   on = !on;";
@@ -134,7 +134,7 @@ void setup() {
 
   pinMode(D1, OUTPUT);
   digitalWrite(D1, LOW);
-  ledState = digitalRead(D1) == HIGH ? "1" : "''";
+  lampState = digitalRead(D1) == HIGH ? "1" : "''";
   
   myIP = WiFi.softAPIP();
   Serial.println("IP: " + myIP.toString());
